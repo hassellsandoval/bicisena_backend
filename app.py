@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 # -------------------------------------------------------------------- #
-# COnfiguración CORS
+# Configuración CORS
 # -------------------------------------------------------------------- #
 CORS(app)
 
@@ -25,13 +25,14 @@ db = SQLAlchemy(app)
 # -------------------------------------------------------------------- #
 # Importaciónd de los blueprints de cada una de las rutas
 # -------------------------------------------------------------------- #
-# --> from routes import usuarios
-
+from routes.public.public_routes import usuarios_public
+from routes.users.user_routes import usuarios_users
+from routes.admin.admin_routes import usuarios_admin
 # -------------------------------------------------------------------- #
 # Creación de las tablas en la base de datos a través de los modelos con SQLAlchemy
 # -------------------------------------------------------------------- #
 with app.app_context():
-    from models import *
+    from models.models import *
 
     db.create_all()
 
@@ -42,4 +43,4 @@ with app.app_context():
 
 @app.route("/")
 def hello_world():
-    return "<p>Hola, Soy una pequeña api</p>"
+    return "<p>Hola, Soy una pequeña api de bicicletas</p>"
