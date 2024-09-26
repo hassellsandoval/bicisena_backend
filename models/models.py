@@ -5,7 +5,6 @@ from sqlalchemy.orm import relationship, Mapped, mapped_column
 from app import db
 from enums.estrato import Estrato
 from enums.rol import Rol
-from enums.metodo_pago import Metodo_Pago
 from typing import List
 
 # -------------------------------------------------------------------------------------------------------- #
@@ -23,9 +22,8 @@ class Usuarios(db.Model):  # Usa db.Model como base para las clases
     departamento: Mapped[str] = mapped_column(String(255), nullable=False)
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    rol: Mapped[Rol] = mapped_column(Enum(Rol), nullable=False)
-    estrato: Mapped[Estrato] = mapped_column(Enum(Estrato), nullable=False)
+    rol: Mapped[Rol] = mapped_column(Enum(Rol), nullable=False, default=Rol.USUARIO)
+    estrato: Mapped[str] = mapped_column(String(255), nullable=False)
 
     usuarios_ciclopaseo: Mapped[list["UsuariosCiclopaseo"]] = relationship(back_populates="usuarios")
     alquiler: Mapped[list["Alquiler"]] = relationship(back_populates="usuarios")  # type: ignore # type: ignore
@@ -33,15 +31,15 @@ class Usuarios(db.Model):  # Usa db.Model como base para las clases
 
     def to_dict(self):
         return {
-            "nombres": self.nombres,
-            "direccion": self.direccion,
-            "barrio": self.barrio,
-            "ciudad": self.ciudad,
-            "departamento": self.departamento,
-            "email": self.email,
-            "password": self.password,
-            "rol": self.rol,
-            "estrato": self.estrato,
+            'id_usuarios': self.id_usuarios,
+            'nombres': self.nombres,
+            'direccion': self.direccion,
+            'barrio': self.barrio,
+            'ciudad': self.ciudad,
+            'departamento': self.departamento,
+            'email': self.email,
+            'rol': self.rol.value,
+            'estrato': self.estrato
         }
     
     def __repr__(self):
@@ -101,7 +99,7 @@ class Bicicletas(db.Model):
     id_regionales: Mapped[int] = mapped_column(Integer, ForeignKey("regionales.id_regionales"))
     
     regionales: Mapped["Regionales"] = relationship(back_populates="bicicletas")
-    alquiler: Mapped[list["Alquiler"]] = relationship(back_populates="biciletas")
+    alquiler: Mapped[list["Alquiler"]] = relationship(back_populates="bicicletas")
 
 
     def to_dict(self):

@@ -26,7 +26,7 @@ db = SQLAlchemy(app)
 # Importaciónd de los blueprints de cada una de las rutas
 # -------------------------------------------------------------------- #
 from routes.public.public_routes import usuarios_public
-from routes.users.user_routes import usuarios_users
+from routes.users.user_routes import usuarios_users, bicicletas_users
 from routes.admin.admin_routes import usuarios_admin
 # -------------------------------------------------------------------- #
 # Creación de las tablas en la base de datos a través de los modelos con SQLAlchemy
@@ -39,7 +39,9 @@ with app.app_context():
 # -------------------------------------------------------------------- #
 # Registro de Blueprints rutas publicas
 # -------------------------------------------------------------------- #
-# --> app.register_blueprint(usuarios)
+app.register_blueprint(usuarios_users)
+app.register_blueprint(bicicletas_users)
+app.register_blueprint(usuarios_public)
 
 @app.route("/")
 def hello_world():

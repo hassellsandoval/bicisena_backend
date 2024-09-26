@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from models.models import usuarios, bicicletas
+from models.models import Usuarios, Bicicletas
 from app import db
 
 # --------------------------------------------------------------------- #
@@ -31,7 +31,7 @@ def obtener_usuarios():
 
 @usuarios_admin.get("admin/usuarios/<int:id>")
 def obtener_usuario_por_id(id):
-    usuario = usuarios.query.get_or_404(id, description="usuario no encontrada")
+    usuario = Usuarios.query.get_or_404(id, description="usuario no encontrada")
     if not usuario:
         return jsonify({"message": "usuario no encontrada"}), 404
     return jsonify(
@@ -52,7 +52,7 @@ def obtener_usuario_por_id(id):
 @usuarios_admin.post("admin/usuarios")
 def guardar_usuarios():
     data = request.json
-    nuevo_usuario = usuarios(   nombres=data['nombres'],
+    nuevo_usuario = Usuarios(   nombres=data['nombres'],
     
                                 direccion=data['direccion'],
                                 barrio=data['barrio'],
@@ -68,7 +68,7 @@ def guardar_usuarios():
 
 @usuarios_admin.patch('admin/usuarios/<int:id>')
 def actualizar_usuario(id):
-    usuario = usuarios.query.get(id)
+    usuario = Usuarios.query.get(id)
     if not usuario:
         return jsonify({'message': 'usuario no encontrada'}), 404
     data = request.json
@@ -86,7 +86,7 @@ def actualizar_usuario(id):
 
 @usuarios_admin.delete('admin/usuarios/<int:id>')
 def eliminar_usuario(id):
-    usuario = usuarios.query.get(id)
+    usuario = Usuarios.query.get(id)
     if not usuario:
         return jsonify({'message': 'usuario no encontrada'}), 404
     db.session.delete(usuario)
@@ -122,7 +122,7 @@ def obtener_bicicletas():
 
 @bicicletas_admin.get("admin/bicicletas/<int:id>")
 def obtener_bicicleta_por_id(id):
-    bicicleta = bicicletas.query.get_or_404(id, description="bicicleta no encontrada")
+    bicicleta = Bicicletas.query.get_or_404(id, description="bicicleta no encontrada")
     if not bicicleta:
         return jsonify({"message": "bicicleta no encontrada"}), 404
     return jsonify(
@@ -143,7 +143,7 @@ def obtener_bicicleta_por_id(id):
 @bicicletas_admin.post("admin/bicicletas")
 def guardar_bicicletas():
     data = request.json
-    nuevo_bicicleta = bicicletas(   serial=data['serial'],
+    nuevo_bicicleta = Bicicletas(   serial=data['serial'],
                                     color=data['color'],
                                     marca=data['marca'],
                                     estado=data['estado'],
@@ -159,7 +159,7 @@ def guardar_bicicletas():
 
 @bicicletas_admin.patch('admin/bicicletas/<int:id>')
 def actualizar_bicicleta(id):
-    bicicleta = bicicletas.query.get(id)
+    bicicleta = Bicicletas.query.get(id)
     if not bicicleta:
         return jsonify({'message': 'bicicleta no encontrada'}), 404
     data = request.json
@@ -176,7 +176,7 @@ def actualizar_bicicleta(id):
 
 @bicicletas_admin.delete('admin/bicicletas/<int:id>')
 def eliminarcategroias(id):
-    bicicleta = bicicletas.query.get(id)
+    bicicleta = Bicicletas.query.get(id)
     if not bicicleta:
         return jsonify({'message': 'bicicleta no encontrada'}), 404
     db.session.delete(bicicleta)

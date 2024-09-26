@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from models.models import usuarios, bicicletas
+from models.models import Usuarios, Bicicletas
 from app import db
 
 # --------------------------------------------------------------------- #
@@ -8,9 +8,9 @@ from app import db
 
 usuarios_users = Blueprint("usuarios_users", __name__)
 
-@usuarios_users.get("/usuarios")
+@usuarios_users.get("/users/usuarios")
 def obtener_usuarios():
-    usuarios = usuarios.query.all()
+    usuarios = Usuarios.query.all()
     lista_usuarios = [
         {
             "id_usuarios": usuario.id_usuarios,
@@ -28,9 +28,9 @@ def obtener_usuarios():
     return jsonify(lista_usuarios)
 
 
-@usuarios_users.get("/usuarios/<int:id>")
+@usuarios_users.get("/users/usuarios/<int:id>")
 def obtener_usuario_por_id(id):
-    usuario = usuarios.query.get_or_404(id, description="usuario no encontrada")
+    usuario = Usuarios.query.get_or_404(id, description="usuario no encontrada")
     if not usuario:
         return jsonify({"message": "usuario no encontrada"}), 404
     return jsonify(
@@ -48,9 +48,9 @@ def obtener_usuario_por_id(id):
         }
     )
 
-@usuarios_users.patch('/usuarios/<int:id>')
+@usuarios_users.patch('/users/usuarios/<int:id>')
 def actualizar_usuario(id):
-    usuario = usuarios.query.get(id)
+    usuario = Usuarios.query.get(id)
     if not usuario:
         return jsonify({'message': 'usuario no encontrada'}), 404
     data = request.json
@@ -66,24 +66,15 @@ def actualizar_usuario(id):
     db.session.commit()
     return jsonify({'message': 'usuario actualizada satisfactoriamente'}), 200
 
-@usuarios_users.delete('/usuarios/<int:id>')
-def eliminarcategroias(id):
-    usuario = usuarios.query.get(id)
-    if not usuario:
-        return jsonify({'message': 'usuario no encontrada'}), 404
-    db.session.delete(usuario)
-    db.session.commit()
-    return jsonify({'message': 'La usuario ha sido eliminada satisactoriamnete'}), 200
-
 # --------------------------------------------------------------------- #
 # Rutas para las bicicletas
 # --------------------------------------------------------------------- #
 
-bicicletas_admin = Blueprint("bicicletas_admin", __name__)
+bicicletas_users = Blueprint("bicicletas_users", __name__)
 
-@bicicletas_admin.get("admin/bicicletas")
+@bicicletas_users.get("/users/bicicletas")
 def obtener_bicicletas():
-    bicicletas = bicicletas.query.all()
+    bicicletas = Bicicletas.query.all()
     lista_bicicletas = [
         {
             "id_bicicletas": bicicleta.id_bicicletas,
@@ -102,9 +93,9 @@ def obtener_bicicletas():
     return jsonify(lista_bicicletas)
 
 
-@bicicletas_admin.get("admin/bicicletas/<int:id>")
+@bicicletas_users.get("/users/bicicletas/<int:id>")
 def obtener_bicicleta_por_id(id):
-    bicicleta = bicicletas.query.get_or_404(id, description="bicicleta no encontrada")
+    bicicleta = Bicicletas.query.get_or_404(id, description="bicicleta no encontrada")
     if not bicicleta:
         return jsonify({"message": "bicicleta no encontrada"}), 404
     return jsonify(
