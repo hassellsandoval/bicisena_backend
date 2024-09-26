@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from models.models import Usuarios, Bicicletas
+from models.models import Usuarios, Bicicletas, UsuariosCiclopaseo, ciclopaseo
 from app import db
 
 # --------------------------------------------------------------------- #
@@ -182,3 +182,70 @@ def eliminarcategroias(id):
     db.session.delete(bicicleta)
     db.session.commit()
     return jsonify({'message': 'La bicicleta ha sido eliminada satisactoriamnete'}), 200
+
+# --------------------------------------------------------------------- #
+# Rutas para las bicicletas
+# --------------------------------------------------------------------- #
+
+usuciclo_admin = Blueprint("usuciclo_admin", __name__)
+
+# Rutas para UsuariosCiclopaseo
+@usuciclo_admin.get('/usuarios_ciclopaseo')
+def get_usuarios_ciclopaseo():
+    usuarios_ciclopaseo = UsuariosCiclopaseo.query.all()
+    return jsonify([uc.to_dict() for uc in usuarios_ciclopaseo])
+
+@usuciclo_admin.get('/usuarios_ciclopaseo/<int:id>')
+def get_usuario_ciclopaseo(id):
+    usuario_ciclopaseo = UsuariosCiclopaseo.query.get_or_404(id)
+    return jsonify(usuario_ciclopaseo.to_dict())
+
+@usuciclo_admin.post('/usuarios_ciclopaseo')
+def create_usuario_ciclopaseo():
+    data = request.json
+    nuevo_usuario_ciclopaseo = UsuariosCiclopaseo(**data)
+    db.session.add(nuevo_usuario_ciclopaseo)
+    db.session.commit()
+    return jsonify(nuevo_usuario_ciclopaseo.to_dict()), 201
+
+@usuciclo_admin.patch('/usuarios_ciclopaseo/<int:id>')
+def update_usuario_ciclopaseo(id):
+    usuario_ciclopaseo = UsuariosCiclopaseo.query.get_or_404(id)
+    data = request.json
+    for key, value in data.items():
+        setattr(usuario_ciclopaseo, key, value)
+    db.session.commit()
+    return jsonify(usuario_ciclopaseo.to_dict())
+
+# --------------------------------------------------------------------- #
+# Rutas para las bicicletas
+# --------------------------------------------------------------------- #
+
+ciclopaseo_admin = Blueprint("ciclopaseo_admin", __name__)
+# Rutas para Ciclopaseo
+@ciclopaseo_admin.get('/ciclopaseo')
+def get_ciclopaseo():
+    ciclopaseos = ciclopaseo.query.all()
+    return jsonify([ciclo.to_dict() for ciclo in ciclopaseos])
+
+@ciclopaseo_admin.get('/ciclopaseo/<int:id>')
+def get_ciclo(id):
+    ciclo = ciclopaseo.query.get_or_404(id)
+    return jsonify(ciclo.to_dict())
+
+@ciclopaseo_admin.post('/ciclopaseo')
+def create_ciclopaseo():
+    data = request.json
+    nuevo_ciclopaseo = ciclopaseo(**data)
+    db.session.add(nuevo_ciclopaseo)
+    db.session.commit()
+    return jsonify(nuevo_ciclopaseo.to_dict()), 201
+
+@ciclopaseo_admin.patch('/ciclopaseo/<int:id>')
+def update_ciclopaseo(id):
+    ciclo = ciclopaseo.query.get_or_404(id)
+    data = request.json
+    for key, value in data.items():
+        setattr(ciclo, key, value)
+    db.session.commit()
+    return jsonify(ciclo.to_dict())
